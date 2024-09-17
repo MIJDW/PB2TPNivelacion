@@ -1,17 +1,14 @@
 package ar.edu.unlam.pb2.dominio;
-
-import java.util.Arrays;
-
+import java.util.LinkedList;
 public class GradoInfoDocente {
 	
 	private NivelesDeEducacion nivel;
 	private Grados grado;
-	private Materias[] materias;
+	private LinkedList<Materias> materias = new LinkedList<Materias>();
 	
 	public GradoInfoDocente(NivelesDeEducacion nivel, Grados grado) {
 		this.nivel = nivel;
 		this.grado = grado;
-		iniciarMaterias();
 	}
 	
 	public NivelesDeEducacion getNivel() {
@@ -20,53 +17,26 @@ public class GradoInfoDocente {
 	public Grados getGrado() {
 		return this.grado;
 	}
-	public Materias[] getMaterias() {
+	public LinkedList<Materias> getMaterias() {
 		return this.materias;
 	}
 	
-	private void iniciarMaterias() {
-		if(nivel.equals(NivelesDeEducacion.SECUNDARIA)) {
-			this.materias = new Materias[Materias.values().length];
-		}
-	}
-	
-	public Boolean contieneMateria(Materias materia) {
-		Boolean contiene = Boolean.FALSE;
-		if(this.materias != null) {
-			for(Integer i = 0; i < this.materias.length && !contiene; i++) {
-				if(this.materias[i] != null) {
-					if(this.materias[i].equals(materia)) {
-						contiene = Boolean.TRUE;
-					}
-				}	
-			}
-		}
-		return contiene;
-	}
-	
 	public Boolean agregarMateria(Materias materia) {
-		Boolean agrego = Boolean.FALSE;
-		if(this.materias != null) {
-			if(!contieneMateria(materia)) {
-				this.materias[materia.ordinal()] = materia;
-				agrego = Boolean.TRUE;
-			}
+		if(!this.materias.contains(materia) && this.nivel.equals(NivelesDeEducacion.SECUNDARIA)) {
+			return this.materias.add(materia);
 		}
-		return agrego;
+		return Boolean.FALSE;
 	}
 	
 	public Boolean eliminarMateria(Materias materia) {
-		Boolean eliminar = Boolean.FALSE;
-		if(contieneMateria(materia)) {
-			this.materias[materia.ordinal()] = null;
+		if(this.materias.contains(materia)) {
+			return this.materias.remove(materia);
 		}
-		return eliminar;
-	}
-
-	@Override
-	public String toString() {
-		return "GradoInfoDocente [nivel=" + nivel + ", grado=" + grado + ", materias=" + Arrays.toString(materias)
-				+ "]";
+		return Boolean.FALSE;
 	}
 	
+	@Override
+	public String toString() {
+		return "GradoInfoDocente [nivel=" + nivel + ", grado=" + grado + "]";
+	}
 }

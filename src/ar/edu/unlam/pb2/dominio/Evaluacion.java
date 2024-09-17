@@ -1,7 +1,7 @@
 package ar.edu.unlam.pb2.dominio;
-
+import java.util.Objects;
 public class Evaluacion {
-	
+
 	private String fecha;
 	private NivelesDeEducacion nivel;
 	private Grados grado;
@@ -18,6 +18,15 @@ public class Evaluacion {
 		this.materia = materia;
 	}
 	
+	public NivelesDeEducacion getNivel() {
+		return this.nivel;
+	}
+	public Grados getGrado() {
+		return this.grado;
+	}
+	public Materias getMateria() {
+		return this.materia;
+	}
 	public String getFecha() {
 		return this.fecha;
 	}
@@ -27,7 +36,10 @@ public class Evaluacion {
 	public Boolean getAprobado() {
 		return this.aprobado;
 	}
-	
+	public Integer getNota() {
+		return this.nota;
+	}
+
 	public Boolean agregarDocenteYFecha(Docente docente, String fecha) {
 		Boolean agrego = Boolean.FALSE;
 		if(this.docente == null && this.fecha == null) {
@@ -50,9 +62,25 @@ public class Evaluacion {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(fecha);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Evaluacion other = (Evaluacion) obj;
+		return Objects.equals(fecha, other.fecha);
+	}
+
+	@Override
 	public String toString() {
 		return "Evaluacion [fecha=" + fecha + ", nivel=" + nivel + ", grado=" + grado + ", materia=" + materia
 				 + ", docente=" + docente + ", nota=" + nota + ", aprobado=" + aprobado + "]";
 	}
-	
 }

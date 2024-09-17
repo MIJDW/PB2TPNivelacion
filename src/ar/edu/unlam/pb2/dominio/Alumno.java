@@ -461,7 +461,7 @@ public class Alumno {
 		if(contieneNivelDeEducacion(nivel) && alumnoCumpleConEdadMinimaParaAgregarGrado(nivel, grado)) {
 			if(!contieneGrado(nivel, grado)) {
 				if(cantidadDeGradosCursados() == 0 || (indiceDelGradoCursadoMasAlto() == (indiceDeGradoACursar(nivel, grado) - 1) && aproboGradoAnterior())) {
-					this.gradosCursados[indiceDeGradoACursar(nivel, grado)] = new GradoInfo(nivel, grado, this.cantidadDeEvaluaciones);
+					this.gradosCursados[indiceDeGradoACursar(nivel, grado)] = new GradoInfo(nivel, grado);
 					agregar = Boolean.TRUE;
 				}
 			}

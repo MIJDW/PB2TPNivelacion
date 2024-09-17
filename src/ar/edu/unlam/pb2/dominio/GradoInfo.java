@@ -1,20 +1,18 @@
 package ar.edu.unlam.pb2.dominio;
 
+import java.util.ArrayList;
+
 public class GradoInfo {
 	
 	private NivelesDeEducacion nivel;
 	private Grados grado;
-	private Materias[] materias;
-	
-	private Portafolio[] portafolios;
-	private Integer cantidadDeEvaluaciones;
-	
-	private Boolean aprobado = Boolean.FALSE;
+	private ArrayList<Materias> materias = new ArrayList<Materias>();
+	private ArrayList<Portafolio> portafolios = new ArrayList<Portafolio>();
+	private Boolean aprobado;
 
-	public GradoInfo(NivelesDeEducacion nivel, Grados grado, Integer cantidadDeEvaluaciones) {
+	public GradoInfo(NivelesDeEducacion nivel, Grados grado) {
 		this.nivel = nivel;
 		this.grado = grado;
-		this.cantidadDeEvaluaciones = cantidadDeEvaluaciones;
 		inicializarMaterias();
 	}
 	
@@ -24,111 +22,74 @@ public class GradoInfo {
 	public Grados getGrado() {
 		return this.grado;
 	}
-	public Materias[] getMaterias() {
+	public ArrayList<Materias> getMaterias() {
 		return this.materias;
 	}
-	public Portafolio[] getPortafolios() {
+	public ArrayList<Portafolio> getPortafolios() {
 		return this.portafolios;
 	}
 	public Boolean getAprobado() {
 		return this.aprobado;
 	}
-
+	
 	private void inicializarMaterias() {
-		if(verificarSiSePuedeInicializarMaterias()) {
-			this.materias = new Materias[Materias.values().length];
-			for(Integer i = 0; i < this.materias.length; i++) {
-				this.materias[i] = Materias.values()[i];
+		if(this.nivel.equals(NivelesDeEducacion.SECUNDARIA)) {
+			for(Materias materia : Materias.values()) {
+				this.materias.add(materia);
 			}
 			inicializarPortafoliosParaMaterias();
 		}else {
-			InicializarPortafoliosIndividual();
+			inicializarPortafolioIndividual();
 		}
 	}
 	
-	private Boolean verificarSiSePuedeInicializarMaterias() {
-		Boolean puede = Boolean.FALSE;
-		if(this.nivel.equals(NivelesDeEducacion.SECUNDARIA)) {
-			puede = Boolean.TRUE;
-		}
-		return puede;
-	}
-	
-	private void InicializarPortafoliosIndividual() {
-		this.portafolios = new Portafolio[1];
-		this.portafolios[0] = new Portafolio(this.nivel, this.grado, null, this.cantidadDeEvaluaciones); 
+	private void inicializarPortafolioIndividual() {
+		this.portafolios.add(new Portafolio(this.nivel, this.grado, null));
 	}
 	
 	private void inicializarPortafoliosParaMaterias() {
-		this.portafolios = new Portafolio[this.materias.length];
-		for(Integer i = 0; i < this.portafolios.length; i++) {
-			if(this.portafolios[i] == null) {
-				this.portafolios[i] = new Portafolio(this.nivel, this.grado, this.materias[i], this.cantidadDeEvaluaciones); 
-			}
+		for(Materias materia : getMaterias()) {
+			this.portafolios.add(new Portafolio(this.nivel, this.grado, materia));
 		}
 	}
 	
-	private Portafolio obtenerPortafolioParaMateria(Materias materia) {
-		Portafolio portafolio = null;
-		Boolean obtuvo = Boolean.FALSE;
-		if(this.materias != null && materia != null) {
-			for(Integer i = 0; i < this.portafolios.length && !obtuvo;i++) {
-				if(this.portafolios[i].getMateria().equals(materia)) {
-					portafolio = this.portafolios[i];
-					obtuvo = Boolean.TRUE;
-				}
+	private Portafolio buscarPortafolioDeMateria(Materias materia) {
+		Portafolio buscado = null;
+		for(Portafolio portafolio : getPortafolios()) {
+			if(portafolio.getMateria().equals(materia)) {
+				buscado = portafolio;
 			}
-		}	
-		return portafolio;
+		}
+		return buscado;
 	}
 	
 	public Portafolio obtenerPortafolio(Materias materia) {
 		Portafolio portafolio = null;
 		if(this.nivel.equals(NivelesDeEducacion.SECUNDARIA)) {
-			portafolio = obtenerPortafolioParaMateria(materia);	
+			portafolio = buscarPortafolioDeMateria(materia);	
 		}else if(this.nivel.equals(NivelesDeEducacion.PRIMARIA)){
-			portafolio = this.portafolios[0];
+			portafolio = this.portafolios.get(0);
 		}
 		return portafolio;
 	}
 	
-	private void comprobarSituacionAcademicaParaMaterias() {
-		Integer necesario = (this.cantidadDeEvaluaciones * this.materias.length);
-		Integer contador = 0;
-		for(Integer i = 0; i < this.materias.length; i++) {
-			Portafolio portafolio = obtenerPortafolioParaMateria(this.materias[i]);
-			for(Integer j = 0; j < portafolio.getEvaluaciones().length; j++) {
-				if(portafolio.getEvaluaciones()[j].getAprobado() != null) {
-					if(portafolio.getEvaluaciones()[j].getAprobado()) {
-						contador++;
+	public void comprobarSituacionAcademica() {
+		Integer cantidadDeEvaluaciones = 0;
+		Integer cantidadDeAprobadas = 0;
+		for(Portafolio portafolio : getPortafolios()) {
+			if(portafolio.getEvaluaciones().size() > 0) {
+				for(Evaluacion evaluacion : portafolio.getEvaluaciones()) {
+					cantidadDeEvaluaciones++;
+					if(evaluacion.getAprobado()) {
+						cantidadDeAprobadas++;
 					}
-				}	
-			}
-		}
-		if(necesario == contador) {
-			this.aprobado = Boolean.TRUE;
-		}
-	}
-	
-	private void comprobarSituacionAcademicaUnica() {
-		Integer contador = 0;
-		for(Integer i = 0; i < this.portafolios[0].getEvaluaciones().length; i++) {
-			if(this.portafolios[0].getEvaluaciones()[i].getAprobado() != null) {
-				if(this.portafolios[0].getEvaluaciones()[i].getAprobado()) {
-					contador++;
 				}
 			}
 		}
-		if(contador == this.cantidadDeEvaluaciones) {
+		if(cantidadDeEvaluaciones == cantidadDeAprobadas) {
 			this.aprobado = Boolean.TRUE;
-		}
-	}
-	
-	public void comprobarSituacion() {
-		if(this.nivel.equals(NivelesDeEducacion.SECUNDARIA)) {
-			comprobarSituacionAcademicaParaMaterias();
-		}else if(this.nivel.equals(NivelesDeEducacion.PRIMARIA)){
-			comprobarSituacionAcademicaUnica();
+		}else {
+			this.aprobado = Boolean.FALSE;
 		}
 	}
 	
@@ -136,5 +97,4 @@ public class GradoInfo {
 	public String toString() {
 		return "GradoInfo [nivel=" + nivel + ", grado=" + grado + ", aprobado=" + aprobado + "]";
 	}
-	
 }

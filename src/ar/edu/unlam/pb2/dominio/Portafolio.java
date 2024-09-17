@@ -1,51 +1,44 @@
 package ar.edu.unlam.pb2.dominio;
-
+import java.util.ArrayList;
 public class Portafolio {
-	
+
 	private NivelesDeEducacion nivel;
 	private Grados grado;
 	private Materias materia;
-	
-	private Evaluacion[] evaluaciones;
+	private ArrayList<Evaluacion> evaluaciones = new ArrayList<Evaluacion>();
 
-	public Portafolio(NivelesDeEducacion nivel, Grados grado, Materias materia, Integer cantidadDeEvaluaciones) {
+	public Portafolio(NivelesDeEducacion nivel, Grados grado, Materias materia) {
 		this.nivel = nivel;
 		this.grado = grado;
 		this.materia = materia;
-		this.evaluaciones = new Evaluacion[cantidadDeEvaluaciones];
-		iniciarEvaluaciones();
 	}
 	
+	public NivelesDeEducacion getNivel() {
+		return this.nivel;
+	}
+	public Grados getGrado() {
+		return this.grado;
+	}
 	public Materias getMateria() {
 		return this.materia;
 	}
-	public Evaluacion[] getEvaluaciones() {
+	public ArrayList<Evaluacion> getEvaluaciones() {
 		return this.evaluaciones;
 	}
-	
-	private void iniciarEvaluaciones() {
-		for(Integer i = 0; i < this.evaluaciones.length; i++) {
-			if(this.evaluaciones[i] == null) {
-				this.evaluaciones[i] = new Evaluacion(this.nivel, this.grado, this.materia);
+
+	public Boolean agregarEvaluacion(Evaluacion evaluacion) {
+		if(evaluacion.getNivel().equals(this.nivel) && evaluacion.getGrado().equals(this.grado)) {
+			if((this.materia != null && evaluacion.getMateria().equals(this.materia)) || (this.materia == null && evaluacion.getMateria() == null)) {
+				if(!this.evaluaciones.contains(evaluacion) && evaluacion.getDocente() != null && evaluacion.getNota() != null) {
+					return this.evaluaciones.add(evaluacion);
+				}
 			}
 		}
-	}
-	
-	public Evaluacion obtenerEvaluacionParaCorregir() {
-		Evaluacion evaluacion = null;
-		Boolean obtuvo = Boolean.FALSE;
-		for(Integer i = 0; i < this.evaluaciones.length && !obtuvo; i++) {
-			if(this.evaluaciones[i].getFecha() == null && this.evaluaciones[i].getDocente() == null) {
-				evaluacion = this.evaluaciones[i];
-				obtuvo = Boolean.TRUE;
-			}
-		}
-		return evaluacion;
+		return Boolean.FALSE;
 	}
 
 	@Override
 	public String toString() {
 		return "Portafolio [nivel=" + nivel + ", grado=" + grado + ", materia=" + materia + "]";
 	}
-	
 }
