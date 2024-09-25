@@ -1,21 +1,20 @@
-package ar.edu.unlam.pb2.dominio;
+package ar.edu.unlam.pb2.evaluaciones;
 import java.util.Objects;
+import ar.edu.unlam.pb2.enumsDatos.*;
+import ar.edu.unlam.pb2.personas.*;
+
 public class Evaluacion {
 
-	private String fecha;
-	private NivelesDeEducacion nivel;
-	private Grados grado;
-	private Materias materia;
+	protected String fecha;
+	protected NivelesDeEducacion nivel;
+	protected Grados grado;
+	protected Docente docente;
+	protected Integer nota;
+	protected Boolean aprobado;
 	
-	private Docente docente;
-	
-	private Integer nota;
-	private Boolean aprobado;
-	
-	public Evaluacion(NivelesDeEducacion nivel, Grados grado, Materias materia) {
-		this.nivel = nivel;
+	public Evaluacion(Grados grado) {
+		this.nivel = NivelesDeEducacion.PRIMARIA;
 		this.grado = grado;
-		this.materia = materia;
 	}
 	
 	public NivelesDeEducacion getNivel() {
@@ -23,9 +22,6 @@ public class Evaluacion {
 	}
 	public Grados getGrado() {
 		return this.grado;
-	}
-	public Materias getMateria() {
-		return this.materia;
 	}
 	public String getFecha() {
 		return this.fecha;
@@ -80,7 +76,7 @@ public class Evaluacion {
 
 	@Override
 	public String toString() {
-		return "Evaluacion [fecha=" + fecha + ", nivel=" + nivel + ", grado=" + grado + ", materia=" + materia
-				 + ", docente=" + docente + ", nota=" + nota + ", aprobado=" + aprobado + "]";
+		return "Evaluacion [fecha=" + fecha + ", nivel=" + nivel + ", grado=" + grado + ", docente=" + docente
+				+ ", nota=" + nota + ", aprobado=" + aprobado + "]";
 	}
 }

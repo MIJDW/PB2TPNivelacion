@@ -1,5 +1,0 @@
-package ar.edu.unlam.pb2.dominio;
-
-public enum MenuDivision {
-	OBTENER_LISTA_DE_ALUMNOS_ORDENADA_POR_NOMBRE, AGREGAR_DOCENTE_A_DIVISION, ELIMINAR_DOCENTE_DE_DIVISION, SALIR;
-}

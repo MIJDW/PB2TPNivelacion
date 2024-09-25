@@ -1,4 +1,4 @@
-package ar.edu.unlam.pb2.dominio;
+package ar.edu.unlam.pb2.enumsDatos;
 
 public enum NivelesDeEducacion {
 	JARDIN, PRIMARIA, SECUNDARIA;
